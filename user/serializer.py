@@ -1,4 +1,4 @@
-import typing
+import typing, re
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_text
@@ -7,11 +7,27 @@ from rest_framework.validators import UniqueValidator
 from user.models import User, School
 
 
+def validate_username(username):
+    rule = re.compile("^[a-zA-Z0-9_]*$")  # alphanumeric and underscore
+    if not rule.match(username):
+        raise serializers.ValidationError(
+            'Username must be alphanumeric and underscore(_).')
+
+
+def validate_phone_number(value):
+    filtered = value[1:]  # remove the '+' at the front
+    if not value.isnumeric():
+        raise serializers.ValidationError(
+            'This field must be following format: "+821012341234".')
+
+
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True,
+        min_length=5,
         validators=[
             UniqueValidator(queryset=User.objects.all()),
+            validate_username,
         ],
         max_length=30,
     )
@@ -26,7 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(
         required=True,
         validators=[
-            UniqueValidator(queryset=User.objects.all()),
+            UniqueValidator(queryset=User.objects.all()), validate_phone_number
         ],
         max_length=14)
     school_code = serializers.CharField(
