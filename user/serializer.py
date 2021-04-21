@@ -8,10 +8,11 @@ from user.models import User, School
 
 
 def validate_username(username):
-    rule = re.compile("^[a-zA-Z0-9_]*$")  # alphanumeric and underscore
+    rule = re.compile(
+        "/^[a-zA-Z0-9_]+([-.][a-zA-Z0-9_]+)*$/")  # alphanumeric and underscore
     if not rule.match(username):
         raise serializers.ValidationError(
-            'Username must be alphanumeric and underscore(_).')
+            'Username must be alphanumeric, dot and underscore(_).')
 
 
 def validate_phone_number(value):
