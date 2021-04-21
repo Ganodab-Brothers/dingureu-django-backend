@@ -38,7 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     GENDER_CHOICES = (("F", "FEMALE"), ("M", "Male"), ("E", "ETC"))
 
-    username = models.CharField(max_length=30, unique=True)
+    username = models.CharField(max_length=30, null=False, unique=True)
     nickname = models.CharField(max_length=30, null=False)
     phone_number = models.CharField(max_length=14, null=True)
     gender = models.CharField(max_length=1,
