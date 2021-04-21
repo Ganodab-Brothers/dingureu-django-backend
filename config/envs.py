@@ -16,3 +16,4 @@ DB_NAME = os.environ.get("DB_NAME", "database")
 
 WAS_HOST = os.environ.get(
     "WAS_HOST") if not DEBUG else "http://localhost:8000/api/"
+API_VERSION = os.environ.get("API_VERSION", "1.0")
