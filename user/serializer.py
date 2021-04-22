@@ -8,18 +8,24 @@ from user.models import User, School
 
 
 def validate_username(username):
-    rule = re.compile(
-        "/^[a-zA-Z0-9_]+([-.][a-zA-Z0-9_]+)*$/")  # alphanumeric and underscore
+    rule = re.compile("[a-zA-Z0-9._]*$")  # alphanumeric and underscore
     if not rule.match(username):
         raise serializers.ValidationError(
             'Username must be alphanumeric, dot and underscore(_).')
 
 
 def validate_phone_number(value):
+    error_message = 'This field must be following format: "+821012341234".'
+    if value[0] != "+":
+        raise serializers.ValidationError(error_message)
     filtered = value[1:]  # remove the '+' at the front
+    if not filtered.isnumeric():  # the rest of value should be numeric
+        raise serializers.ValidationError(error_message)
+
+
+def validate_numeric(value):
     if not value.isnumeric():
-        raise serializers.ValidationError(
-            'This field must be following format: "+821012341234".')
+        raise serializers.ValidationError('This field must be numeric.')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -35,7 +41,9 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         required=True,
-        validators=[validate_password],
+        validators=[
+            validate_password,
+        ],
         min_length=1,
         max_length=128,
     )
@@ -43,12 +51,16 @@ class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(
         required=True,
         validators=[
-            UniqueValidator(queryset=User.objects.all()), validate_phone_number
+            UniqueValidator(queryset=User.objects.all()),
+            validate_phone_number,
         ],
         max_length=14)
     school_code = serializers.CharField(
         required=True,
         write_only=True,
+        validators=[
+            validate_numeric,
+        ],
         max_length=20,
     )
     school_name = serializers.CharField(
