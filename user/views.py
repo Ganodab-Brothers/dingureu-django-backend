@@ -29,6 +29,19 @@ class UserView(viewsets.GenericViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @swagger_auto_schema(responses={
+        200: UserSerializerDocument,
+        401: "Unauthorized"
+    })
+    @action(detail=False, methods=['get'])
+    def me(self, request: HttpRequest, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer: UserSerializer = self.get_serializer(request.user)
+        return Response(serializer.data)
+
     # todo: get my profile
+    # todo: get other's profile (with sensitive information filtering)
     # todo: update profile
     # todo: set password
