@@ -4,4 +4,10 @@ from user.views import UserView
 router = DefaultRouter()
 router.register(r'users', UserView, basename="user")
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('token/', TokenObtainPairView.as_view()),
+    path('token/refresh/', TokenRefreshView.as_view()),
+    path('token/verify/', TokenVerifyView.as_view()),
+]
+
+urlpatterns += router.urls
