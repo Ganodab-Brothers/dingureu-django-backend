@@ -26,7 +26,7 @@ class UserView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        self.perform_create(serializer)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # todo: get my profile
