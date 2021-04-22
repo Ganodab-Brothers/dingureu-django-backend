@@ -8,7 +8,7 @@ from user.serializer import UserSerializerDocument
 from drf_yasg.utils import swagger_auto_schema
 
 
-class UserView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class UserView(viewsets.GenericViewSet):
     queryset = User.objects.all()
     permission_classes = (permissions.AllowAny, )
     serializer_class = UserSerializer
