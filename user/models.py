@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 class School(models.Model):
     school_code = models.CharField(max_length=20, null=False)
     school_name = models.CharField(max_length=30, null=False)
+    location = models.CharField(max_length=10, null=False)
 
     def __str__(self):
         return self.school_name
