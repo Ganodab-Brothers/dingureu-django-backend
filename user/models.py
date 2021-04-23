@@ -42,14 +42,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, null=False, unique=True)
     nickname = models.CharField(max_length=30, null=False)
     phone_number = models.CharField(max_length=14, null=True)
-    gender = models.CharField(max_length=1,
+    gender = models.CharField(
+        max_length=1,
                               choices=GENDER_CHOICES,
                               null=False,
-                              default="M")
+        default="M",
+    )
     birthday = models.DateField(null=True)
     student_id = models.CharField(max_length=8, null=True)
-    school = models.ForeignKey(School, on_delete=models.PROTECT, null=False)
+    school: School = models.ForeignKey(
+        School,
+                                       on_delete=models.PROTECT,
+        null=False,
+    )
     date_joined = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     USERNAME_FIELD = 'username'
 
