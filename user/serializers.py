@@ -1,10 +1,8 @@
 import typing, re
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.encoding import smart_text
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from user.models import User, School
+from user.models import User, School, RegisterApplication
 
 
 def validate_username(username):
@@ -72,6 +70,8 @@ class UserSerializer(serializers.ModelSerializer):
         slug_field='school_name',
         read_only=True,
     )
+    location = serializers.CharField(required=True, write_only=True)
+    school_id_card_url = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         model = User
@@ -86,13 +86,17 @@ class UserSerializer(serializers.ModelSerializer):
             'school_code',
             'school_name',
             'school',
+            'location',
+            'school_id_card_url',
         )
 
     def create(_, data: typing.Dict):
+        # get or create school
         school: School = School.objects.get_or_create(
             school_code=data['school_code'],
             school_name=data['school_name'],
-        )[0]
+            location=data['location'])[0]
+        # create user
         user = User.objects.create(
             username=data['username'],
             password=data['username'],
@@ -104,6 +108,10 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(data['password'])
         user.save()
+        # create register application
+        RegisterApplication.objects.create(
+            user=user, school_id_card_url=data['school_id_card_url'])
+        # create register application
         return user
 
 
