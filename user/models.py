@@ -51,7 +51,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=1,
         choices=GENDER_CHOICES,
         null=False,
-        default="M",
     )
     birthday = models.DateField(null=True)
     student_id = models.CharField(max_length=8, null=True)
