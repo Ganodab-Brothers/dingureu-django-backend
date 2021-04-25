@@ -6,8 +6,8 @@ from user.models import School
 class SchoolArticle(models.Model):
     writer = models.ForeignKey(
         AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        null=False,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     title = models.CharField(max_length=50, null=False)
     content = models.TextField(null=False)
@@ -20,8 +20,8 @@ class SchoolArticle(models.Model):
 class LocalArticle(models.Model):
     writer = models.ForeignKey(
         AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        null=False,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     title = models.CharField(max_length=50, null=False)
     content = models.TextField(null=False)
