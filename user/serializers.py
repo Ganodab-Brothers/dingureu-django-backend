@@ -47,7 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
     )
     birthday = serializers.DateField(required=False)
     phone_number = serializers.CharField(
-        required=True,
+        required=False,
         validators=[
             UniqueValidator(queryset=User.objects.all()),
             validate_phone_number,
