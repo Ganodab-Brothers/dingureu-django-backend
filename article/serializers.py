@@ -40,3 +40,13 @@ class LocalArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = LocalArticle
         fields = '__all__'
+
+
+class SchoolArticleSerializerRetrieverDocument(serializers.Serializer):
+    article = SchoolArticleSerializer()
+    comments = SchoolArticleCommentSerializer(many=True)
+
+
+class LocalArticleSerializerRetrieverDocument(serializers.Serializer):
+    article = LocalArticleSerializer()
+    comments = LocalArticleCommentSerializer(many=True)
