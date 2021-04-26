@@ -1,9 +1,10 @@
 from django.http.request import HttpRequest
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.response import Response
 from article.models import LocalArticleComment, SchoolArticle, LocalArticle, SchoolArticleComment
 from article.permissions import IsSameLocation, IsSameSchool, IsWriterOrReadOnly
-from article.serializers import SchoolArticleCommentSerializer, LocalArticleCommentSerializer, SchoolArticleSerializer, LocalArticleSerializer
+from article.serializers import LocalArticleSerializerRetrieverDocument, SchoolArticleCommentSerializer, LocalArticleCommentSerializer, SchoolArticleSerializer, LocalArticleSerializer, SchoolArticleSerializerRetrieverDocument
 
 
 class SchoolArticleCommentView(
@@ -59,6 +60,10 @@ class SchoolArticleView(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
+    @swagger_auto_schema(responses={
+        200: SchoolArticleSerializerRetrieverDocument,
+        401: "Unauthorized"
+    })
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer: SchoolArticleSerializer = self.get_serializer(instance)
@@ -107,6 +112,10 @@ class LocalArticleView(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
+    @swagger_auto_schema(responses={
+        200: LocalArticleSerializerRetrieverDocument,
+        401: "Unauthorized"
+    })
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer: LocalArticleSerializer = self.get_serializer(instance)
