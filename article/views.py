@@ -14,6 +14,7 @@ class SchoolArticleCommentView(
         viewsets.GenericViewSet,
 ):
     queryset = SchoolArticleComment.objects.all()
+    serializer_class = SchoolArticleCommentSerializer
     permission_classes = (permissions.IsAuthenticated, IsWriterOrReadOnly)
 
 
@@ -25,6 +26,7 @@ class LocalArticleCommentView(
         viewsets.GenericViewSet,
 ):
     queryset = LocalArticleComment.objects.all()
+    serializer_class = LocalArticleCommentSerializer
     permission_classes = (permissions.IsAuthenticated, IsWriterOrReadOnly)
 
 
