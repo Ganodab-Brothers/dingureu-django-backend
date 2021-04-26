@@ -18,3 +18,5 @@ WAS_HOST = os.environ.get(
     "WAS_HOST") if not DEBUG else "http://localhost:8000/api/"
 API_VERSION = os.environ.get("API_VERSION", "1.0")
 BUCKET_NAME = os.environ.get("BUCKET_NAME", "dingureu-test")
+
+LOGDNA_INGEST_KEY = os.environ.get("LOGDNA_INGEST_KEY")
