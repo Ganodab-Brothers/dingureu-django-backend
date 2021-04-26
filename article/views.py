@@ -11,6 +11,7 @@ class SchoolArticleCommentView(
         mixins.RetrieveModelMixin,
         mixins.UpdateModelMixin,
         mixins.DestroyModelMixin,
+        viewsets.GenericViewSet,
 ):
     queryset = SchoolArticleComment.objects.all()
     permission_classes = (permissions.IsAuthenticated, IsWriterOrReadOnly)
@@ -21,6 +22,7 @@ class LocalArticleCommentView(
         mixins.RetrieveModelMixin,
         mixins.UpdateModelMixin,
         mixins.DestroyModelMixin,
+        viewsets.GenericViewSet,
 ):
     queryset = LocalArticleComment.objects.all()
     permission_classes = (permissions.IsAuthenticated, IsWriterOrReadOnly)
