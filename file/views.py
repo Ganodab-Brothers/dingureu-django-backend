@@ -44,7 +44,7 @@ def create_presigned_post(bucket_name,
 
 
 class FileView(viewsets.GenericViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.AllowAny, )
     serializer_class = FileSerializer
 
     @action(detail=False, methods=["PUT"])
