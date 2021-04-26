@@ -42,7 +42,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
-    GENDER_CHOICES = (("F", "FEMALE"), ("M", "Male"), ("E", "ETC"))
+    GENDER_CHOICES = (("F", "Female"), ("M", "Male"), ("E", "ETC"))
 
     username = models.CharField(max_length=30, null=False, unique=True)
     nickname = models.CharField(max_length=30, null=False)
