@@ -1,11 +1,29 @@
 from rest_framework import serializers
-from article.models import SchoolArticle, LocalArticle
-from user.models import User, School
+from article.models import SchoolArticle, LocalArticle, SchoolArticleComment, LocalArticleComment
+
+
+class SchoolArticleCommentSerializer(serializers.ModelSerializer):
+    writer = serializers.ReadOnlyField(source='writer.username')
+
+    class Meta:
+        model = SchoolArticleComment
+        fields = '__all__'
+
+
+class LocalArticleCommentSerializer(serializers.ModelSerializer):
+    writer = serializers.ReadOnlyField(source='writer.username')
+
+    class Meta:
+        model = LocalArticleComment
+        fields = '__all__'
 
 
 class SchoolArticleSerializer(serializers.ModelSerializer):
-    writer = serializers.ReadOnlyField(source='writer.username')
-    school = serializers.ReadOnlyField()
+    writer = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='nickname',
+    )
+    school = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = SchoolArticle
@@ -13,7 +31,10 @@ class SchoolArticleSerializer(serializers.ModelSerializer):
 
 
 class LocalArticleSerializer(serializers.ModelSerializer):
-    writer = serializers.ReadOnlyField(source='writer.username')
+    writer = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='nickname',
+    )
     location = serializers.ReadOnlyField()
 
     class Meta:
