@@ -55,6 +55,24 @@ class SchoolArticleView(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer: SchoolArticleSerializer = self.get_serializer(instance)
+        article = serializer.data
+
+        # get comments here
+        comments = SchoolArticleComment.objects.filter(article=article['id'])
+        commentSerializer: SchoolArticleCommentSerializer = SchoolArticleCommentSerializer(
+            data=comments,
+            many=True,
+        )
+        commentSerializer.is_valid()
+        response_body = {
+            'article': article,
+            'comments': commentSerializer.data
+        }
+        return Response(response_body)
+
 
 class LocalArticleView(viewsets.ModelViewSet):
     queryset = LocalArticle.objects.all()
@@ -84,3 +102,20 @@ class LocalArticleView(viewsets.ModelViewSet):
             serializer.data,
             status=status.HTTP_201_CREATED,
         )
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer: LocalArticleSerializer = self.get_serializer(instance)
+        article = serializer.data
+
+        comments = LocalArticleComment.objects.filter(article=article['id'])
+        commentSerializer: LocalArticleCommentSerializer = LocalArticleCommentSerializer(
+            data=comments,
+            many=True,
+        )
+        commentSerializer.is_valid()
+        response_body = {
+            'article': article,
+            'comments': commentSerializer.data
+        }
+        return Response(response_body)
