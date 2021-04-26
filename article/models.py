@@ -29,3 +29,31 @@ class LocalArticle(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SchoolArticleComment(models.Model):
+    writer = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    article = models.OneToOneField(
+        SchoolArticle,
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    content = models.TextField(null=False)
+
+
+class LocalArticleComment(models.Model):
+    writer = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    article = models.OneToOneField(
+        LocalArticle,
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    content = models.TextField(null=False)
