@@ -40,13 +40,13 @@ class LocalArticleView(viewsets.ModelViewSet):
     queryset = LocalArticle.objects.all()
     permission_classes = (
         permissions.IsAuthenticated,
-        IsSameSchool,
+        IsSameLocation,
         IsWriterOrReadOnly,
     )
     serializer_class = LocalArticleSerializer
 
     def list(self, request: HttpRequest, *args, **kwargs):
-        queryset = LocalArticle.objects.filter(school=request.user.school)
+        queryset = LocalArticle.objects.filter(location=request.user.location)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -59,7 +59,7 @@ class LocalArticleView(viewsets.ModelViewSet):
     def create(self, request: HttpRequest, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer=request.user, school=request.user.school)
+        serializer.save(writer=request.user, location=request.user.location)
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED,
