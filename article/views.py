@@ -1,9 +1,29 @@
 from django.http.request import HttpRequest
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.response import Response
-from article.models import SchoolArticle, LocalArticle
-from article.permissions import IsSameSchool, IsWriterOrReadOnly
-from article.serializers import SchoolArticleSerializer, LocalArticleSerializer
+from article.models import LocalArticleComment, SchoolArticle, LocalArticle, SchoolArticleComment
+from article.permissions import IsSameLocation, IsSameSchool, IsWriterOrReadOnly
+from article.serializers import SchoolArticleCommentSerializer, LocalArticleCommentSerializer, SchoolArticleSerializer, LocalArticleSerializer
+
+
+class SchoolArticleCommentView(
+        mixins.CreateModelMixin,
+        mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
+):
+    queryset = SchoolArticleComment.objects.all()
+    permission_classes = (permissions.IsAuthenticated, IsWriterOrReadOnly)
+
+
+class LocalArticleCommentView(
+        mixins.CreateModelMixin,
+        mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
+):
+    queryset = LocalArticleComment.objects.all()
+    permission_classes = (permissions.IsAuthenticated, IsWriterOrReadOnly)
 
 
 class SchoolArticleView(viewsets.ModelViewSet):
