@@ -23,7 +23,10 @@ class SchoolArticleSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='nickname',
     )
-    school = serializers.PrimaryKeyRelatedField(read_only=True)
+    school = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field="school_name",
+    )
     created_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
@@ -35,6 +38,10 @@ class LocalArticleSerializer(serializers.ModelSerializer):
     writer = serializers.SlugRelatedField(
         read_only=True,
         slug_field='nickname',
+    )
+    school = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field="school_name",
     )
     location = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(read_only=True)
