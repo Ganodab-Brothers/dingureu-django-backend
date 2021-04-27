@@ -30,7 +30,6 @@ class LocalArticle(models.Model):
     title = models.CharField(max_length=50, null=False)
     content = models.TextField(null=False)
     school = models.ForeignKey(School, on_delete=models.PROTECT, null=False)
-    location = models.CharField(max_length=10, null=False)
 
     def __str__(self):
         return self.title

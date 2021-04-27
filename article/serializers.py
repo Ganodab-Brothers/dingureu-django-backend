@@ -48,7 +48,6 @@ class LocalArticleSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field="school_name",
     )
-    location = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
