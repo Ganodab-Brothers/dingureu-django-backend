@@ -54,7 +54,12 @@ class SchoolArticleView(viewsets.ModelViewSet):
     def create(self, request: HttpRequest, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer=request.user, school=request.user.school)
+        user = request.user
+        school = user.school
+        serializer.save(
+            writer=user,
+            school=school,
+        )
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED,
@@ -108,7 +113,14 @@ class LocalArticleView(viewsets.ModelViewSet):
     def create(self, request: HttpRequest, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer=request.user, location=request.user.location)
+        user = request.user
+        school = user.school
+        location = school.location
+        serializer.save(
+            writer=user,
+            school=school,
+            location=location,
+        )
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED,
