@@ -104,7 +104,7 @@ class UserSerializer(serializers.ModelSerializer):
         # create user
         user = User.objects.create(
             username=data['username'],
-            password=data['username'],
+            password=data['password'],
             nickname=data['nickname'],
             phone_number=data['phone_number'],
             gender=data['gender'],
