@@ -13,7 +13,7 @@ class IsSameSchool(BasePermission):
 class IsSameLocation(BasePermission):
     def has_object_permission(self, request, view, obj):
         location_of_article = obj.location
-        location_of_user = request.user.location
+        location_of_user = request.user.school.location
         return location_of_article == location_of_user
 
 

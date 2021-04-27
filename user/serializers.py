@@ -52,7 +52,10 @@ class UserSerializer(serializers.ModelSerializer):
             UniqueValidator(queryset=User.objects.all()),
             validate_phone_number,
         ],
-        max_length=14)
+        max_length=14,
+    )
+    gender = serializers.ChoiceField(choices=User.GENDER_CHOICES,
+                                     required=True)
     school_code = serializers.CharField(
         required=True,
         write_only=True,
@@ -70,7 +73,9 @@ class UserSerializer(serializers.ModelSerializer):
         slug_field='school_name',
         read_only=True,
     )
-    location = serializers.CharField(required=True, write_only=True)
+    location = serializers.CharField(max_length=10,
+                                     required=True,
+                                     write_only=True)
     school_id_card_url = serializers.CharField(required=True, write_only=True)
 
     class Meta:
@@ -90,7 +95,7 @@ class UserSerializer(serializers.ModelSerializer):
             'school_id_card_url',
         )
 
-    def create(_, data: typing.Dict):
+    def create(self, data: typing.Dict):
         # get or create school
         school: School = School.objects.get_or_create(
             school_code=data['school_code'],
@@ -102,6 +107,7 @@ class UserSerializer(serializers.ModelSerializer):
             password=data['username'],
             nickname=data['nickname'],
             phone_number=data['phone_number'],
+            gender=data['gender'],
             birthday=data['birthday'],
             student_id=data['student_id'],
             school=school,
