@@ -28,6 +28,11 @@ class SchoolArticleSerializer(serializers.ModelSerializer):
         slug_field="school_name",
     )
     created_at = serializers.DateTimeField(read_only=True)
+    hearts = serializers.SlugRelatedField(
+        read_only=True,
+        many=True,
+        slug_field='nickname',
+    )
 
     class Meta:
         model = SchoolArticle
