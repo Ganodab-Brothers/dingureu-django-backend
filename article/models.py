@@ -9,6 +9,7 @@ class SchoolArticle(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+    created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=50, null=False)
     content = models.TextField(null=False)
     school = models.ForeignKey(School, on_delete=models.PROTECT, null=False)
@@ -23,6 +24,7 @@ class LocalArticle(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+    created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=50, null=False)
     content = models.TextField(null=False)
     location = models.CharField(max_length=10, null=False)
