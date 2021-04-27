@@ -1,7 +1,10 @@
 from django.http.request import HttpRequest
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, permissions, status, mixins
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from article.models import LocalArticleComment, SchoolArticle, LocalArticle, SchoolArticleComment
 from article.permissions import IsSameLocation, IsSameSchool, IsWriterOrReadOnly
 from article.serializers import LocalArticleSerializerRetrieverDocument, SchoolArticleCommentSerializer, LocalArticleCommentSerializer, SchoolArticleSerializer, LocalArticleSerializer, SchoolArticleSerializerRetrieverDocument
@@ -69,7 +72,7 @@ class SchoolArticleView(viewsets.ModelViewSet):
         200: SchoolArticleSerializerRetrieverDocument,
         401: "Unauthorized"
     })
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, request: HttpRequest, *args, **kwargs):
         instance = self.get_object()
         serializer: SchoolArticleSerializer = self.get_serializer(instance)
         article = serializer.data
@@ -88,6 +91,26 @@ class SchoolArticleView(viewsets.ModelViewSet):
             'comments': comments,
         }
         return Response(response_body)
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={},
+        ),
+        responses={
+            200: SchoolArticleSerializer,
+            401: "Unauthorized"
+        },
+    )
+    @action(detail=True, methods=['POST'])
+    def heart(self, request: HttpRequest, pk=None):
+        article = get_object_or_404(SchoolArticle, id=pk)
+        if request.user in article.hearts.all():  # remove heart
+            article.hearts.remove(request.user)
+        else:
+            article.hearts.add(request.user)
+        serializer: SchoolArticleSerializer = self.get_serializer(article)
+        return Response(serializer.data)
 
 
 class LocalArticleView(viewsets.ModelViewSet):
@@ -126,10 +149,11 @@ class LocalArticleView(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    @swagger_auto_schema(responses={
-        200: LocalArticleSerializerRetrieverDocument,
-        401: "Unauthorized"
-    })
+    @swagger_auto_schema(
+        responses={
+            200: LocalArticleSerializerRetrieverDocument,
+            401: "Unauthorized",
+        }, )
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer: LocalArticleSerializer = self.get_serializer(instance)
@@ -146,3 +170,23 @@ class LocalArticleView(viewsets.ModelViewSet):
             'comments': commentSerializer.data
         }
         return Response(response_body)
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={},
+        ),
+        responses={
+            200: LocalArticleSerializer,
+            401: "Unauthorized"
+        },
+    )
+    @action(detail=True, methods=['POST'])
+    def heart(self, request: HttpRequest, pk=None):
+        article = get_object_or_404(LocalArticle, id=pk)
+        if request.user in article.hearts.all():  # remove heart
+            article.hearts.remove(request.user)
+        else:
+            article.hearts.add(request.user)
+        serializer: LocalArticleSerializer = self.get_serializer(article)
+        return Response(serializer.data)
