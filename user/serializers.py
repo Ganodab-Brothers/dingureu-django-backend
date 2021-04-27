@@ -32,6 +32,12 @@ def validate_address(value):
             'This field must be in following format: "서울특별시 용산구 원효로97길 33-4')
 
 
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = '__all__'
+
+
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True,
@@ -75,10 +81,7 @@ class UserSerializer(serializers.ModelSerializer):
         write_only=True,
         max_length=30,
     )
-    school = serializers.SlugRelatedField(
-        slug_field='school_name',
-        read_only=True,
-    )
+    school = SchoolSerializer()
     location = serializers.CharField(
         required=True,
         write_only=True,
