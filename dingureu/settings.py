@@ -10,10 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import logging
 from pathlib import Path
 from config import envs
-from logdna import LogDNAHandler
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,25 +149,4 @@ SWAGGER_SETTINGS = {
         }
     },
     'USE_SESSION_AUTH': False,
-}
-
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'logdna': {
-            'level': logging.DEBUG,
-            'class': 'logging.handlers.LogDNAHandler',
-            'key': envs.LOGDNA_INGEST_KEY,
-            'options': {
-                'app': 'dingureu',
-                'index_meta': True,
-            },
-        },
-    },
-    'loggers': {
-        '': {
-            'handlers': ['logdna'],
-            'level': logging.DEBUG
-        },
-    },
 }
