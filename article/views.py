@@ -76,9 +76,11 @@ class SchoolArticleView(viewsets.ModelViewSet):
             many=True,
         )
         commentSerializer.is_valid()
+        comments = commentSerializer.data
+        comments['length'] = len(comments)
         response_body = {
             'article': article,
-            'comments': commentSerializer.data
+            'comments': comments,
         }
         return Response(response_body)
 
