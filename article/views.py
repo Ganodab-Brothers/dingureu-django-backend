@@ -10,6 +10,7 @@ from article.permissions import IsSameLocation, IsSameSchool, IsWriterOrReadOnly
 from article.serializers import LocalArticleSerializerRetrieverDocument, SchoolArticleCommentSerializer, LocalArticleCommentSerializer, SchoolArticleSerializer, LocalArticleSerializer, SchoolArticleSerializerRetrieverDocument
 
 
+# comment views
 class SchoolArticleCommentView(
         mixins.CreateModelMixin,
         mixins.RetrieveModelMixin,
@@ -34,6 +35,7 @@ class LocalArticleCommentView(
     permission_classes = (permissions.IsAuthenticated, IsWriterOrReadOnly)
 
 
+# article views
 class SchoolArticleView(viewsets.ModelViewSet):
     queryset = SchoolArticle.objects.all()
     permission_classes = (
@@ -44,18 +46,20 @@ class SchoolArticleView(viewsets.ModelViewSet):
     serializer_class = SchoolArticleSerializer
 
     def list(self, request: HttpRequest, *args, **kwargs):
-        queryset = SchoolArticle.objects.filter(school=request.user.school)
-
+        queryset = SchoolArticle.objects.filter(
+            school_id=request.user.school_id)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
+        serializer: SchoolArticleSerializer = self.get_serializer(queryset,
+                                                                  many=True)
         return Response(serializer.data)
 
     def create(self, request: HttpRequest, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer: SchoolArticleSerializer = self.get_serializer(
+            data=request.data)
         serializer.is_valid(raise_exception=True)
         user = request.user
         school = user.school
@@ -104,7 +108,7 @@ class SchoolArticleView(viewsets.ModelViewSet):
     )
     @action(detail=True, methods=['POST'])
     def heart(self, request: HttpRequest, pk=None):
-        article = get_object_or_404(SchoolArticle, id=pk)
+        article: SchoolArticle = get_object_or_404(SchoolArticle, id=pk)
         if request.user in article.hearts.all():  # remove heart
             article.hearts.remove(request.user)
         else:
@@ -123,7 +127,8 @@ class LocalArticleView(viewsets.ModelViewSet):
     serializer_class = LocalArticleSerializer
 
     def list(self, request: HttpRequest, *args, **kwargs):
-        queryset = LocalArticle.objects.filter(location=request.user.location)
+        location = request.user.school.location
+        queryset = LocalArticle.objects.filter(school__location=location)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -134,15 +139,14 @@ class LocalArticleView(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request: HttpRequest, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer: LocalArticleSerializer = self.get_serializer(
+            data=request.data)
         serializer.is_valid(raise_exception=True)
         user = request.user
         school = user.school
-        location = school.location
         serializer.save(
             writer=user,
             school=school,
-            location=location,
         )
         return Response(
             serializer.data,
