@@ -5,7 +5,7 @@ from user.views import UserView
 from file.views import FileView
 from article.views import SchoolArticleView, LocalArticleView, SchoolArticleCommentView, LocalArticleCommentView
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'users', UserView, basename="user")
 router.register(r'files', FileView, basename="file")
 router.register(
@@ -30,9 +30,9 @@ router.register(
 )
 
 urlpatterns = [
-    path('token/', TokenObtainPairView.as_view()),
-    path('token/refresh/', TokenRefreshView.as_view()),
-    path('token/verify/', TokenVerifyView.as_view()),
+    path('token', TokenObtainPairView.as_view()),
+    path('token/refresh', TokenRefreshView.as_view()),
+    path('token/verify', TokenVerifyView.as_view()),
 ]
 
 urlpatterns += router.urls
