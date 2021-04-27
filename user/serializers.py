@@ -13,7 +13,7 @@ def validate_username(username):
 
 
 def validate_phone_number(value):
-    error_message = 'This field must be following format: "+821012341234".'
+    error_message = 'This field must be in following format: "+821012341234".'
     if value[0] != "+":
         raise serializers.ValidationError(error_message)
     filtered = value[1:]  # remove the '+' at the front
@@ -24,6 +24,12 @@ def validate_phone_number(value):
 def validate_numeric(value):
     if not value.isnumeric():
         raise serializers.ValidationError('This field must be numeric.')
+
+
+def validate_address(value):
+    if len(value.split(" ")) < 2:
+        raise serializers.ValidationError(
+            'This field must be in following format: "서울특별시 용산구 원효로97길 33-4')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -73,9 +79,11 @@ class UserSerializer(serializers.ModelSerializer):
         slug_field='school_name',
         read_only=True,
     )
-    location = serializers.CharField(max_length=10,
-                                     required=True,
-                                     write_only=True)
+    location = serializers.CharField(
+        required=True,
+        write_only=True,
+        validators=[validate_address],
+    )
     school_id_card_url = serializers.CharField(required=True, write_only=True)
 
     class Meta:
@@ -97,10 +105,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, data: typing.Dict):
         # get or create school
+        location = data['location'].split(" ")[1]
         school: School = School.objects.get_or_create(
             school_code=data['school_code'],
             school_name=data['school_name'],
-            location=data['location'])[0]
+            location=location,
+        )[0]
         # create user
         user = User.objects.create(
             username=data['username'],
