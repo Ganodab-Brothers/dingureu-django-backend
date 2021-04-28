@@ -20,3 +20,5 @@ API_VERSION = os.environ.get("API_VERSION", "1.0")
 BUCKET_NAME = os.environ.get("BUCKET_NAME", "dingureu-test")
 
 LOGDNA_INGEST_KEY = os.environ.get("LOGDNA_INGEST_KEY")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
